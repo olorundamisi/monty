@@ -24,8 +24,11 @@ int monty_main(FILE *script_fd)
 
 	if (initialize_stack(&stack) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
+
 	while (getline(&line, &len, script_fd) != -1)
-	{ line_num++, operation_code_tokens = strtow(line, _DELIMITERS_);
+	{
+		line_num++;
+		operation_code_tokens = strtow(line, _DELIMITERS_);
 		if (operation_code_tokens == NULL)
 		{
 			if (contains_only_delimiters(line, _DELIMITERS_))
@@ -33,15 +36,18 @@ int monty_main(FILE *script_fd)
 			free_stack(&stack);
 			return (err_malloc_fail()); }
 		else if (operation_code_tokens[0][0] == '#')
-		{ free_opcode_toks();
+		{
+			free_opcode_toks();
 			continue; }
 		op_func = match_opcode_to_function(operation_code_tokens[0]);
 		if (op_func == NULL)
-		{ free_stack(&stack);
+		{
+			free_stack(&stack);
 			exit_status = err_unknown_instruction(operation_code_tokens[0], line_num);
 			free_opcode_toks();
 			break; }
-		length_of_previous_token = opcode_token_len(), op_func(&stack, line_num);
+		length_of_previous_token = opcode_token_len();
+		op_func(&stack, line_num);
 		if (opcode_token_len() != length_of_previous_token)
 		{
 			if (operation_code_tokens &&
@@ -53,7 +59,13 @@ int monty_main(FILE *script_fd)
 			free_opcode_toks();
 			break; }
 		free_opcode_toks(); }
-	free_stack(&stack), free(line);
+	free_stack(&stack);
+
 	if (line && *line == 0)
-		return (err_malloc_fail());
-	return (exit_status); }
+	{
+		free(line);
+		return (err_malloc_fail()); }
+
+	free(line);
+	return (exit_status);
+}
