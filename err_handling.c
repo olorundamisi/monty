@@ -59,7 +59,8 @@ int err_push_integer(unsigned int line_num)
 }
 
 /**
- * err_unknown_instruction - Print error message that occurs to unknown operation.
+ * err_unknown_instruction - Print error message that occurs to unknown
+ *                           operation.
  * @opcode: Operation Code showing where the error occurred.
  * @line_num: The number of the line in the Monty bytecodes file script where
  *            the error occurred.
